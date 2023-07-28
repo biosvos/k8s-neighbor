@@ -18,10 +18,10 @@ func newUnstructured(group string, version string, kind string, namespace string
 	return &ret
 }
 
-func jsonifyUnstructured(uns *unstructured.Unstructured) (string, error) {
+func jsonifyUnstructured(uns *unstructured.Unstructured) ([]byte, error) {
 	json, err := uns.MarshalJSON()
 	if err != nil {
-		return "", errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
-	return string(json), nil
+	return json, nil
 }

@@ -24,11 +24,11 @@ type Client struct {
 	client clientGo.Client
 }
 
-func (c *Client) Get(group string, version string, kind string, namespace string, name string) (string, error) {
+func (c *Client) Get(group string, version string, kind string, namespace string, name string) ([]byte, error) {
 	uns := newUnstructured(group, version, kind, namespace, name)
 	err := getResource(c.client, uns)
 	if err != nil {
-		return "", errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 	return jsonifyUnstructured(uns)
 }
