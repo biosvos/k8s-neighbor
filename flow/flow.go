@@ -4,16 +4,21 @@ import (
 	"github.com/biosvos/k8s-neighbor/client"
 	"github.com/biosvos/k8s-neighbor/domain"
 	"github.com/biosvos/k8s-neighbor/lib"
+	"github.com/biosvos/k8s-neighbor/printer"
 	"github.com/biosvos/k8s-neighbor/stakeholder"
 	"log"
 )
 
-func NewFlow(client *client.Client) *Flow {
-	return &Flow{client: client}
+func NewFlow(client *client.Client, printer printer.Printer) *Flow {
+	return &Flow{
+		client:  client,
+		printer: printer,
+	}
 }
 
 type Flow struct {
-	client *client.Client
+	client  *client.Client
+	printer printer.Printer
 }
 
 func (f *Flow) GetWorkloadResources(group string, version string, kind string, namespace string, name string) {
@@ -37,7 +42,11 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 		}
 		conflict[top.String()] = struct{}{}
 
-		log.Println("current:", top)
+		err := f.printer.PrintResourceIdentifier(top)
+		if err != nil {
+			panic(err)
+		}
+
 		resource, err := f.client.Get(top)
 		if err != nil {
 			panic(err)
@@ -47,6 +56,12 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 			identifiers, err := holder.Find(resource)
 			if err != nil {
 				panic(err)
+			}
+			for _, identifier := range identifiers {
+				err := f.printer.PrintResourceRelation(top, identifier)
+				if err != nil {
+					panic(err)
+				}
 			}
 			stack.Push(identifiers...)
 		}
