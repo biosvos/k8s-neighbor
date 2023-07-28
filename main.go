@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/biosvos/go-template/internal"
+	"github.com/biosvos/k8s-neighbor/internal"
 	"log"
 )
 

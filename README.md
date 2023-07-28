@@ -1,0 +1,1 @@
+kubernetes에서 특정 resource와 관계된 모든 리소스를 찾는다.

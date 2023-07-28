@@ -1,4 +1,4 @@
-module github.com/biosvos/go-template
+module github.com/biosvos/k8s-neighbor
 
 go 1.20
 
