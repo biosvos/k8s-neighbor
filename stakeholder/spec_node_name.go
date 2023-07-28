@@ -6,9 +6,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-type PodNodeName struct{}
+type SpecNodeName struct{}
 
-func (p *PodNodeName) Find(contents []byte) ([]*domain.ResourceIdentifier, error) {
+func (p *SpecNodeName) Find(contents []byte) ([]*domain.ResourceIdentifier, error) {
 	parser, err := json.NewParser(contents)
 	if err != nil {
 		return nil, errors.WithStack(err)

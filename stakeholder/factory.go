@@ -4,10 +4,13 @@ import "github.com/biosvos/k8s-neighbor/domain"
 
 func MakeStakeholders(gvk *domain.GroupVersionKind) []Stakeholder {
 	var ret []Stakeholder
-	ret = append(ret, &OwnerReferences{})
+	ret = append(ret,
+		&MetadataOwnerReferences{},
+		&MetadataNamespace{},
+	)
 	switch gvk.String() {
 	case ".v1.Pod":
-		ret = append(ret, &PodNodeName{})
+		ret = append(ret, &SpecNodeName{})
 	}
 	return ret
 }

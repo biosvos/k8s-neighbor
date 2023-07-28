@@ -7,9 +7,9 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-type OwnerReferences struct{}
+type MetadataOwnerReferences struct{}
 
-func (o *OwnerReferences) Find(contents []byte) ([]*domain.ResourceIdentifier, error) {
+func (o *MetadataOwnerReferences) Find(contents []byte) ([]*domain.ResourceIdentifier, error) {
 	parser, err := json.NewParser(contents)
 	if err != nil {
 		return nil, errors.WithStack(err)
