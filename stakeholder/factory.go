@@ -10,8 +10,11 @@ func MakeStakeholders(gvk *domain.GroupVersionKind) []Stakeholder {
 	)
 	switch gvk.String() {
 	case ".v1.Pod":
-		ret = append(ret, &SpecNodeName{})
-		ret = append(ret, &SpecServiceAccountName{})
+		ret = append(ret,
+			&SpecNodeName{},
+			&SpecServiceAccountName{},
+			&SpecVolumes{},
+		)
 	}
 	return ret
 }
