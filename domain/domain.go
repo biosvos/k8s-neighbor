@@ -17,3 +17,7 @@ type ResourceIdentifier struct {
 	Namespace string
 	Name      string
 }
+
+func (r *ResourceIdentifier) String() string {
+	return fmt.Sprintf("%v.%v.%v", r.GVK, r.Namespace, r.Name)
+}

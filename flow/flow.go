@@ -28,11 +28,16 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 		Name:      name,
 	})
 
+	conflict := map[string]struct{}{}
 	for !stack.IsEmpty() {
 		top := stack.Peek()
-		log.Println("current:", top)
 		stack.Drop(1)
+		if _, ok := conflict[top.String()]; ok {
+			continue
+		}
+		conflict[top.String()] = struct{}{}
 
+		log.Println("current:", top)
 		resource, err := f.client.Get(top)
 		if err != nil {
 			panic(err)
@@ -42,9 +47,6 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 			identifiers, err := holder.Find(resource)
 			if err != nil {
 				panic(err)
-			}
-			for _, identifier := range identifiers {
-				log.Println(identifier)
 			}
 			stack.Push(identifiers...)
 		}
