@@ -49,7 +49,8 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 
 		resource, err := f.client.Get(top)
 		if err != nil {
-			panic(err)
+			log.Println(top, "not found")
+			continue
 		}
 		stakeholders := stakeholder.MakeStakeholders(top.GVK)
 		for _, holder := range stakeholders {
