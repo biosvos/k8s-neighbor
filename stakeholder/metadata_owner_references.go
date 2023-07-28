@@ -10,20 +10,12 @@ import (
 type MetadataOwnerReferences struct{}
 
 func (o *MetadataOwnerReferences) Find(contents []byte) ([]*domain.ResourceIdentifier, error) {
+	namespace := getNamespace(contents)
 	parser, err := json.NewParser(contents)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
-	namespace := parseMetadataNamespace(parser)
 	return parseOwnerReferences(parser, namespace), nil
-}
-
-func parseMetadataNamespace(node *json.Parser) string {
-	one, err := node.ParseOne(".metadata.namespace")
-	if err != nil {
-		return ""
-	}
-	return one.GetMustString()
 }
 
 func parseOwnerReferences(parser *json.Parser, namespace string) []*domain.ResourceIdentifier {

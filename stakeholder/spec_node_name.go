@@ -2,32 +2,21 @@ package stakeholder
 
 import (
 	"github.com/biosvos/k8s-neighbor/domain"
-	"github.com/biosvos/k8s-neighbor/json"
-	"github.com/pkg/errors"
 )
 
 type SpecNodeName struct{}
 
 func (p *SpecNodeName) Find(contents []byte) ([]*domain.ResourceIdentifier, error) {
-	parser, err := json.NewParser(contents)
-	if err != nil {
-		return nil, errors.WithStack(err)
+	nodeNames := getStrings(contents, ".spec.nodeName")
+	var ret []*domain.ResourceIdentifier
+	for _, name := range nodeNames {
+		ret = append(ret, &domain.ResourceIdentifier{
+			GVK: &domain.GroupVersionKind{
+				Version: "v1",
+				Kind:    "Node",
+			},
+			Name: name,
+		})
 	}
-	node := parseNode(parser)
-	return []*domain.ResourceIdentifier{node}, nil
-}
-
-func parseNode(parser *json.Parser) *domain.ResourceIdentifier {
-	one, err := parser.ParseOne(".spec.nodeName")
-	if err != nil {
-		panic(err)
-	}
-	name := one.GetMustString()
-	return &domain.ResourceIdentifier{
-		GVK: &domain.GroupVersionKind{
-			Version: "v1",
-			Kind:    "Node",
-		},
-		Name: name,
-	}
+	return ret, nil
 }
