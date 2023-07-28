@@ -15,6 +15,8 @@ func MakeStakeholders(gvk *domain.GroupVersionKind) []Stakeholder {
 			&SpecServiceAccountName{},
 			&SpecVolumes{},
 		)
+	case "apps.v1.Deployment":
+		ret = append(ret)
 	}
 	return ret
 }

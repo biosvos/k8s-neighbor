@@ -33,3 +33,12 @@ func (c *Client) Get(identifier *domain.ResourceIdentifier) ([]byte, error) {
 	}
 	return jsonifyUnstructured(uns)
 }
+
+func (c *Client) ListByLabelSelector(identifier *domain.ResourceIdentifier, selector map[string]string) ([][]byte, error) {
+	unsList := newUnstructuredList(identifier)
+	err := listResourcesByLabelSelector(c.client, unsList, identifier.Namespace, selector)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	return jsonifyUnstructuredList(unsList)
+}

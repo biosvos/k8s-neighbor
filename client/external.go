@@ -2,6 +2,7 @@ package client
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	apiErrors "k8s.io/apimachinery/pkg/api/errors"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -24,4 +25,12 @@ func mappingError(err error) error {
 	default:
 		return err
 	}
+}
+
+func listResourcesByLabelSelector(client clientGo.Client, unsList *unstructured.UnstructuredList, namespace string, selector map[string]string) error {
+	err := client.List(context.Background(), unsList, clientGo.InNamespace(namespace), clientGo.MatchingLabels(selector))
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
 }
