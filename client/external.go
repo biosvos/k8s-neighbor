@@ -18,7 +18,7 @@ func getResource(client clientGo.Client, uns *unstructured.Unstructured) error {
 
 func mappingError(err error) error {
 	reason := apiErrors.ReasonForError(err)
-	switch reason {
+	switch reason { //nolint:exhaustive
 	case metaV1.StatusReasonNotFound:
 		return ErrNotFound
 	default:

@@ -12,6 +12,9 @@ func NewClient() (*Client, error) {
 		return nil, errors.WithStack(err)
 	}
 	client, err := clientGo.New(config, clientGo.Options{})
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
 	return &Client{
 		client: client,
 	}, nil
