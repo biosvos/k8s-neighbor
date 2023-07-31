@@ -9,9 +9,9 @@ type SpecVolumes struct{}
 func (*SpecVolumes) Find(contents []byte) ([]*domain.ResourceIdentifier, error) {
 	namespace := getNamespace(contents)
 	var configMapNames []string
-	strings := getStrings(contents, ".spec.volumes[*].configMap.name")
+	strings := getStrings(contents, "spec.volumes[*].configMap.name")
 	configMapNames = append(configMapNames, strings...)
-	strings = getStrings(contents, ".spec.volumes[*].projected.sources[*].configMap.name")
+	strings = getStrings(contents, "spec.volumes[*].projected.sources[*].configMap.name")
 	configMapNames = append(configMapNames, strings...)
 	var ret []*domain.ResourceIdentifier
 	for _, name := range configMapNames {

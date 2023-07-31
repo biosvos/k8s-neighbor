@@ -7,7 +7,7 @@ import (
 type SpecNodeName struct{}
 
 func (p *SpecNodeName) Find(contents []byte) ([]*domain.ResourceIdentifier, error) {
-	nodeNames := getStrings(contents, ".spec.nodeName")
+	nodeNames := getStrings(contents, "spec.nodeName")
 	var ret []*domain.ResourceIdentifier
 	for _, name := range nodeNames {
 		ret = append(ret, &domain.ResourceIdentifier{

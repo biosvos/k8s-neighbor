@@ -1,11 +1,11 @@
 package stakeholder
 
 import (
-	"github.com/biosvos/k8s-neighbor/json"
+	"github.com/biosvos/jason"
 )
 
 func getNamespace(contents []byte) string {
-	namespaces := getStrings(contents, ".metadata.namespace")
+	namespaces := getStrings(contents, "metadata.namespace")
 	if len(namespaces) == 0 {
 		return ""
 	}
@@ -13,20 +13,18 @@ func getNamespace(contents []byte) string {
 }
 
 func getStrings(contents []byte, path string) []string {
-	parser, err := json.NewParser(contents)
+	root, err := jason.NewJason(contents)
 	if err != nil {
 		return nil
 	}
-	nodes, err := parser.Parse(path)
-	if err != nil {
-		return nil
-	}
+	nodes := root.Path(path)
+	//nodes, err := root.Parse(path)
+	//if err != nil {
+	//	return nil
+	//}
 	var ret []string
 	for _, node := range nodes {
-		want, err := node.GetString()
-		if err != nil {
-			continue
-		}
+		want := node.String()
 		ret = append(ret, want)
 	}
 	return ret

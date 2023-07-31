@@ -8,7 +8,7 @@ type SpecServiceAccountName struct{}
 
 func (*SpecServiceAccountName) Find(contents []byte) ([]*domain.ResourceIdentifier, error) {
 	namespace := getNamespace(contents)
-	serviceAccountNames := getStrings(contents, ".spec.serviceAccountName")
+	serviceAccountNames := getStrings(contents, "spec.serviceAccountName")
 	var ret []*domain.ResourceIdentifier
 	for _, name := range serviceAccountNames {
 		ret = append(ret, &domain.ResourceIdentifier{

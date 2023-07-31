@@ -3,8 +3,8 @@ module github.com/biosvos/k8s-neighbor
 go 1.20
 
 require (
+	github.com/biosvos/jason v0.0.0-20230731040126-e1aa64f2c578
 	github.com/pkg/errors v0.9.1
-	github.com/spyzhov/ajson v0.9.0
 	github.com/stretchr/testify v1.8.4
 	k8s.io/apimachinery v0.27.4
 	sigs.k8s.io/controller-runtime v0.15.0
