@@ -1,21 +1,10 @@
 package dresource
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 )
 
 var _ Resource = &Deployment{}
-
-func NewDeployment(contents []byte) (*Deployment, error) {
-	var ret Deployment
-	err := json.Unmarshal(contents, &ret)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	return &ret, nil
-}
 
 type Deployment struct {
 	APIVersion string    `json:"apiVersion"`

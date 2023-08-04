@@ -1,21 +1,10 @@
 package dresource
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 )
 
 var _ Resource = &Normal{}
-
-func NewNormal(contents []byte) (*Normal, error) {
-	var ret Normal
-	err := json.Unmarshal(contents, &ret)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-	return &ret, nil
-}
 
 type Normal struct {
 	APIVersion string    `json:"apiVersion"`
