@@ -34,3 +34,11 @@ func listResourcesByLabelSelector(client clientGo.Client, unsList *unstructured.
 	}
 	return nil
 }
+
+func listResources(client clientGo.Client, unsList *unstructured.UnstructuredList) error {
+	err := client.List(context.Background(), unsList)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	return nil
+}

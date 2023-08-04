@@ -30,3 +30,10 @@ func TestGet(t *testing.T) {
 		require.Empty(t, resource)
 	})
 }
+
+func TestAll(t *testing.T) {
+	client, _ := NewClient()
+	resources, err := client.List()
+	require.NoError(t, err)
+	require.NotNil(t, resources)
+}
