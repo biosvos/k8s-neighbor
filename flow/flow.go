@@ -1,7 +1,6 @@
 package flow
 
 import (
-	"fmt"
 	"github.com/biosvos/k8s-neighbor/client"
 	"github.com/biosvos/k8s-neighbor/dresource"
 	"github.com/biosvos/k8s-neighbor/lib"
@@ -31,11 +30,8 @@ func NewConflict() *Conflict {
 	}
 }
 
-func (c *Conflict) Check(relation *dresource.Relation) bool {
-	if relation.Name == "" {
-		return false
-	}
-	key := fmt.Sprintf("%v/%v/%v", relation.GVK, relation.Namespace, relation.Name)
+func (c *Conflict) Check(resource dresource.Resource) bool {
+	key := resource.Identity()
 	_, ok := c.elements[key]
 	c.elements[key] = struct{}{}
 	return ok
@@ -57,14 +53,17 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 	for !stack.IsEmpty() {
 		top := stack.Peek()
 		stack.Drop(1)
-		if conflict.Check(top.ToRelation) {
-			continue
-		}
 
 		resource, err := Query(f.client, top.ToRelation)
 		if err != nil {
 			panic(err)
 		}
+
+		f.print(top, resource)
+		if conflict.Check(resource) {
+			continue
+		}
+
 		relations := resource.Relations()
 		for _, relation := range relations {
 			stack.Push(&Pair{
@@ -72,8 +71,6 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 				ToRelation:   relation,
 			})
 		}
-
-		f.print(top, resource)
 	}
 }
 
