@@ -63,7 +63,7 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 		}
 
 		for _, resource := range resources {
-			f.print(top, resource)
+			printRelation(f.printer, top, resource)
 			if conflict.Check(resource) {
 				continue
 			}
@@ -79,15 +79,15 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 	}
 }
 
-func (f *Flow) print(top *Pair, resource dresource.Resource) {
-	err := f.printer.PrintResourceIdentifier(resource)
+func printRelation(p printer.Printer, top *Pair, resource dresource.Resource) {
+	err := p.PrintResourceIdentifier(resource)
 	if err != nil {
 		panic(err)
 	}
 	if top.FromResource == nil {
 		return
 	}
-	err = f.printer.PrintResourceRelation(top.FromResource, resource, string(top.ToRelation.Type))
+	err = p.PrintResourceRelation(top.FromResource, resource, string(top.ToRelation.Type))
 	if err != nil {
 		panic(err)
 	}
