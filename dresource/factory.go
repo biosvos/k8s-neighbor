@@ -15,6 +15,8 @@ func MakeFactory(contents []byte) (Resource, error) {
 		return NewResource[PodSpecSelector](contents)
 	case "v1/Pod":
 		return NewResource[Pod](contents)
+	case "v1/ServiceAccount":
+		return NewResource[ServiceAccount](contents)
 	default:
 		log.Println("unhandled resource", normal.Identity())
 		return normal, nil
