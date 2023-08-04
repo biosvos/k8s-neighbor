@@ -11,7 +11,7 @@ type PodSpecSelector struct {
 	Kind       string    `json:"kind"`
 	Metadata   *Metadata `json:"metadata"`
 	Spec       struct {
-		Selector *Selector `json:"selector"`
+		Selector *Selector `json:"selector,omitempty"`
 	} `json:"spec"`
 }
 
@@ -22,6 +22,8 @@ func (p *PodSpecSelector) Identity() string {
 func (p *PodSpecSelector) Relations() []*Relation {
 	var ret []*Relation
 	ret = append(ret, p.Metadata.Relations()...)
-	ret = append(ret, NewPodSelectorRelation(p.Spec.Selector, p.Metadata.Namespace))
+	if p.Spec.Selector != nil {
+		ret = append(ret, NewPodSelectorRelation(p.Spec.Selector, p.Metadata.Namespace))
+	}
 	return ret
 }

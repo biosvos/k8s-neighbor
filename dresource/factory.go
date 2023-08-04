@@ -11,7 +11,10 @@ func MakeFactory(contents []byte) (Resource, error) {
 		return nil, errors.WithStack(err)
 	}
 	switch normal.GVK() {
-	case "apps/v1/Deployment", "apps/v1/ReplicaSet":
+	case "apps/v1/Deployment", "apps/v1/ReplicaSet",
+		"v1/Service",
+		"apps/v1/DaemonSet", "apps/v1/StatefulSet",
+		"batch/v1/Job", "batch/v1/CronJob":
 		return NewResource[PodSpecSelector](contents)
 	case "v1/Pod":
 		return NewResource[Pod](contents)

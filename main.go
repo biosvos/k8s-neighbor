@@ -57,7 +57,7 @@ func one(resource []byte, cli *client.Client) {
 		panic(err)
 	}
 	group, version := parseAPIVersion(newResource.APIVersion)
-	filename := fmt.Sprintf("%v_%v_%v_%v_%v.d2", group, version, newResource.Kind, newResource.Metadata.Namespace, newResource.Metadata.Name)
+	filename := fmt.Sprintf("all/%v_%v_%v_%v_%v.d2", group, version, newResource.Kind, newResource.Metadata.Namespace, newResource.Metadata.Name)
 	file := openFile(filename)
 	defer closeFile(file)
 
