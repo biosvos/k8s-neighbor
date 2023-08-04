@@ -1,7 +1,6 @@
 package client
 
 import (
-	"github.com/biosvos/k8s-neighbor/domain"
 	"github.com/pkg/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -27,12 +26,12 @@ func jsonifyUnstructured(uns *unstructured.Unstructured) ([]byte, error) {
 	return json, nil
 }
 
-func newUnstructuredList(identifier *domain.ResourceIdentifier) *unstructured.UnstructuredList {
+func newUnstructuredList(group, version, kind string) *unstructured.UnstructuredList {
 	var ret unstructured.UnstructuredList
 	ret.SetGroupVersionKind(schema.GroupVersionKind{
-		Group:   identifier.GVK.Group,
-		Version: identifier.GVK.Version,
-		Kind:    identifier.GVK.Kind,
+		Group:   group,
+		Version: version,
+		Kind:    kind,
 	})
 	return &ret
 }

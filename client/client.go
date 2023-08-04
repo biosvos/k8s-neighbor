@@ -1,7 +1,6 @@
 package client
 
 import (
-	"github.com/biosvos/k8s-neighbor/domain"
 	"github.com/pkg/errors"
 	ctrl "sigs.k8s.io/controller-runtime"
 	clientGo "sigs.k8s.io/controller-runtime/pkg/client"
@@ -25,8 +24,8 @@ type Client struct {
 	client clientGo.Client
 }
 
-func (c *Client) Get(identifier *domain.ResourceIdentifier) ([]byte, error) {
-	uns := newUnstructured(identifier.GVK.Group, identifier.GVK.Version, identifier.GVK.Kind, identifier.Namespace, identifier.Name)
+func (c *Client) Get(group, version, kind, namespace, name string) ([]byte, error) {
+	uns := newUnstructured(group, version, kind, namespace, name)
 	err := getResource(c.client, uns)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -34,9 +33,9 @@ func (c *Client) Get(identifier *domain.ResourceIdentifier) ([]byte, error) {
 	return jsonifyUnstructured(uns)
 }
 
-func (c *Client) ListByLabelSelector(identifier *domain.ResourceIdentifier, selector map[string]string) ([][]byte, error) {
-	unsList := newUnstructuredList(identifier)
-	err := listResourcesByLabelSelector(c.client, unsList, identifier.Namespace, selector)
+func (c *Client) ListByLabelSelector(group, version, kind, namespace string, selector map[string]string) ([][]byte, error) {
+	unsList := newUnstructuredList(group, version, kind)
+	err := listResourcesByLabelSelector(c.client, unsList, namespace, selector)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
