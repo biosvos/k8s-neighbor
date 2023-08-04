@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/biosvos/k8s-neighbor/client"
-	"github.com/biosvos/k8s-neighbor/dresource"
 	"github.com/biosvos/k8s-neighbor/flow"
 	"github.com/biosvos/k8s-neighbor/printer"
 	"log"
@@ -42,29 +41,30 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	list, err := cli.List()
-	if err != nil {
-		panic(err)
-	}
-	for _, resource := range list {
-		one(resource, cli)
-	}
+	//list, err := cli.List()
+	//if err != nil {
+	//	panic(err)
+	//}
+	//for _, resource := range list {
+	//	newResource, err := dresource.NewResource[dresource.Normal](resource)
+	//	if err != nil {
+	//		panic(err)
+	//	}
+	//	group, version := parseAPIVersion(newResource.APIVersion)
+	//	one(cli, group, version, newResource.Kind, newResource.Metadata.Namespace, newResource.Metadata.Name)
+	//}
+	one(cli, "rbac.authorization.k8s.io", "v1", "ClusterRoleBinding", "kube-system", "system:controller:cloud-provider")
 }
 
-func one(resource []byte, cli *client.Client) {
-	newResource, err := dresource.NewResource[dresource.Normal](resource)
-	if err != nil {
-		panic(err)
-	}
-	group, version := parseAPIVersion(newResource.APIVersion)
-	filename := fmt.Sprintf("all/%v_%v_%v_%v_%v.d2", group, version, newResource.Kind, newResource.Metadata.Namespace, newResource.Metadata.Name)
+func one(cli *client.Client, group, version, kind, namespace, name string) {
+	filename := fmt.Sprintf("all/%v_%v_%v_%v_%v.d2", group, version, kind, namespace, name)
 	file := openFile(filename)
 	defer closeFile(file)
 
 	flo := flow.NewFlow(cli, &printer.D2{
 		Writer: file,
 	})
-	flo.GetWorkloadResources(group, version, newResource.Kind, newResource.Metadata.Namespace, newResource.Metadata.Name)
+	flo.GetWorkloadResources(group, version, kind, namespace, name)
 }
 
 func parseAPIVersion(apiVersion string) (string, string) {

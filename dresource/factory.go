@@ -20,6 +20,8 @@ func MakeFactory(contents []byte) (Resource, error) {
 		return NewResource[Pod](contents)
 	case "v1/ServiceAccount":
 		return NewResource[ServiceAccount](contents)
+	case "rbac.authorization.k8s.io/v1/RoleBinding":
+		return NewResource[RoleBinding](contents)
 	default:
 		log.Println("unhandled resource", normal.Identity())
 		return normal, nil
