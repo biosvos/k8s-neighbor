@@ -32,17 +32,17 @@ func (p *Pod) Identity() string {
 func (p *Pod) Relations() []*Relation {
 	var ret []*Relation
 	ret = append(ret, p.Metadata.Relations()...)
-	ret = append(ret, NewNameSpecRelation("", "v1", "Node", "", p.Spec.NodeName))
-	ret = append(ret, NewNameSpecRelation("", "v1", "ServiceAccount", "", p.Spec.ServiceAccountName))
+	ret = append(ret, NewNameSpecRelation("", "v1", "Node", p.Metadata.Namespace, p.Spec.NodeName))
+	ret = append(ret, NewNameSpecRelation("", "v1", "ServiceAccount", p.Metadata.Namespace, p.Spec.ServiceAccountName))
 	for _, volume := range p.Spec.Volumes {
 		name := volume.ConfigMap.Name()
 		if name != "" {
-			ret = append(ret, NewNameSpecRelation("", "v1", "ConfigMap", "", name))
+			ret = append(ret, NewNameSpecRelation("", "v1", "ConfigMap", p.Metadata.Namespace, name))
 		}
 		for _, source := range volume.Projected.Sources {
 			name := source.ConfigMap.Name()
 			if name != "" {
-				ret = append(ret, NewNameSpecRelation("", "v1", "ConfigMap", "", name))
+				ret = append(ret, NewNameSpecRelation("", "v1", "ConfigMap", p.Metadata.Namespace, name))
 			}
 		}
 	}

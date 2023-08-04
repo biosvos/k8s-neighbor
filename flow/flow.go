@@ -56,6 +56,9 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 
 		resources, err := Query(f.client, top.ToRelation)
 		if err != nil {
+			if errors.Is(err, client.ErrNotFound) {
+				continue
+			}
 			panic(err)
 		}
 

@@ -13,6 +13,8 @@ func MakeFactory(contents []byte) (Resource, error) {
 	switch normal.GVK() {
 	case "apps/v1/Deployment":
 		return NewResource[Deployment](contents)
+	case "v1/Pod":
+		return NewResource[Pod](contents)
 	default:
 		log.Println("unhandled resource", normal.GVK())
 		return normal, nil
