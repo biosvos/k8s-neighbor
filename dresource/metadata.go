@@ -13,7 +13,7 @@ func (m *Metadata) Relations() []*Relation {
 		ret = append(ret, NewNamespaceRelation(m.Namespace))
 	}
 	for _, reference := range m.OwnerReferences {
-		ret = append(ret, NewOwnerReferenceRelation(reference, m.Namespace))
+		ret = append(ret, reference.Relation(m.Namespace))
 	}
 	return ret
 }

@@ -24,3 +24,7 @@ func (o *OwnerReference) Version() string {
 	sp := strings.Split(o.APIVersion, "/")
 	return sp[1]
 }
+
+func (o *OwnerReference) Relation(namespace string) *Relation {
+	return NewOwnerReferenceRelation(o, namespace)
+}
