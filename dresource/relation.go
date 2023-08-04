@@ -3,11 +3,10 @@ package dresource
 type RelationType string
 
 const (
-	UnknownRelation        RelationType = "UnknownRelation"
-	SpecNameRelation                    = "SpecField"
-	OwnerReferenceRelation              = "OwnerReference"
-	NamespaceRelation                   = "Namespace"
-	SelectorRelation                    = "Selector"
+	SpecNameRelation       RelationType = "SpecField"
+	OwnerReferenceRelation RelationType = "OwnerReference"
+	NamespaceRelation      RelationType = "Namespace"
+	SelectorRelation       RelationType = "Selector"
 )
 
 type Relation struct {

@@ -92,8 +92,6 @@ func (f *Flow) print(top *Pair, resource dresource.Resource) {
 
 func Query(c *client.Client, top *dresource.Relation) ([]dresource.Resource, error) {
 	switch top.Type {
-	case dresource.UnknownRelation:
-		panic("sdf")
 	case dresource.SpecNameRelation, dresource.NamespaceRelation, dresource.OwnerReferenceRelation:
 		content, err := c.Get(top.GVK.Group, top.GVK.Version, top.GVK.Kind, top.Namespace, top.Name)
 		if err != nil {
