@@ -22,15 +22,6 @@ func (d *Deployment) Identity() string {
 func (d *Deployment) Relations() []*Relation {
 	var ret []*Relation
 	ret = append(ret, d.Metadata.Relations()...)
-	ret = append(ret, &Relation{
-		Type: SelectorRelation,
-		GVK: GroupVersionKind{
-			Version: "v1",
-			Kind:    "Pod",
-		},
-		Namespace: d.Metadata.Namespace,
-		//Name:      "",
-		Selector: d.Spec.Selector,
-	})
+	ret = append(ret, NewPodSelectorRelation(d.Spec.Selector, d.Metadata.Namespace))
 	return ret
 }

@@ -29,3 +29,39 @@ func NewNameSpecRelation(group, version, kind, namespace, name string) *Relation
 		Name:      name,
 	}
 }
+
+func NewPodSelectorRelation(selector *Selector, namespace string) *Relation {
+	return &Relation{
+		Type: SelectorRelation,
+		GVK: GroupVersionKind{
+			Version: "v1",
+			Kind:    "Pod",
+		},
+		Namespace: namespace,
+		Selector:  selector,
+	}
+}
+
+func NewNamespaceRelation(namespace string) *Relation {
+	return &Relation{
+		Type: NamespaceRelation,
+		GVK: GroupVersionKind{
+			Version: "v1",
+			Kind:    "Namespace",
+		},
+		Name: namespace,
+	}
+}
+
+func NewOwnerReferenceRelation(reference *OwnerReference, namespace string) *Relation {
+	return &Relation{
+		Type: OwnerReferenceRelation,
+		GVK: GroupVersionKind{
+			Group:   reference.Group(),
+			Version: reference.Version(),
+			Kind:    reference.Kind,
+		},
+		Namespace: namespace,
+		Name:      reference.Name,
+	}
+}
