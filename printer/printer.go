@@ -6,5 +6,5 @@ import (
 
 type Printer interface {
 	PrintResourceIdentifier(resource dresource.Resource) error
-	PrintResourceRelation(from dresource.Resource, to dresource.Resource) error
+	PrintResourceRelation(from dresource.Resource, to dresource.Resource, tag string) error
 }

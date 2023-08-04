@@ -21,8 +21,8 @@ func (d *D2) PrintResourceIdentifier(resource dresource.Resource) error {
 	return nil
 }
 
-func (d *D2) PrintResourceRelation(from dresource.Resource, to dresource.Resource) error {
-	_, err := io.WriteString(d.Writer, fmt.Sprintf("\"%v\" -> \"%v\"\n", from.Identity(), to.Identity()))
+func (d *D2) PrintResourceRelation(from dresource.Resource, to dresource.Resource, tag string) error {
+	_, err := io.WriteString(d.Writer, fmt.Sprintf("\"%v\" -> \"%v\":%v\n", from.Identity(), to.Identity(), tag))
 	if err != nil {
 		return errors.WithStack(err)
 	}

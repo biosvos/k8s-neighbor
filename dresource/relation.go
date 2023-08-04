@@ -1,12 +1,13 @@
 package dresource
 
-type RelationType uint64
+type RelationType string
 
 const (
-	UnknownRelation = iota
-	SpecNameRelation
-	OwnerReferenceRelation
-	NamespaceRelation
+	UnknownRelation        RelationType = "UnknownRelation"
+	SpecNameRelation                    = "SpecField"
+	OwnerReferenceRelation              = "OwnerReference"
+	NamespaceRelation                   = "Namespace"
+	SelectorRelation                    = "Selector"
 )
 
 type Relation struct {

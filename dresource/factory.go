@@ -11,6 +11,8 @@ func MakeFactory(contents []byte) (Resource, error) {
 		return nil, errors.WithStack(err)
 	}
 	switch normal.GVK() {
+	case "apps/v1/Deployment":
+		return NewDeployment(contents)
 	default:
 		log.Println("unhandled resource", normal.GVK())
 		return normal, nil

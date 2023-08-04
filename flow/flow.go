@@ -54,22 +54,24 @@ func (f *Flow) GetWorkloadResources(group string, version string, kind string, n
 		top := stack.Peek()
 		stack.Drop(1)
 
-		resource, err := Query(f.client, top.ToRelation)
+		resources, err := Query(f.client, top.ToRelation)
 		if err != nil {
 			panic(err)
 		}
 
-		f.print(top, resource)
-		if conflict.Check(resource) {
-			continue
-		}
+		for _, resource := range resources {
+			f.print(top, resource)
+			if conflict.Check(resource) {
+				continue
+			}
 
-		relations := resource.Relations()
-		for _, relation := range relations {
-			stack.Push(&Pair{
-				FromResource: resource,
-				ToRelation:   relation,
-			})
+			relations := resource.Relations()
+			for _, relation := range relations {
+				stack.Push(&Pair{
+					FromResource: resource,
+					ToRelation:   relation,
+				})
+			}
 		}
 	}
 }
@@ -82,26 +84,40 @@ func (f *Flow) print(top *Pair, resource dresource.Resource) {
 	if top.FromResource == nil {
 		return
 	}
-	err = f.printer.PrintResourceRelation(top.FromResource, resource)
+	err = f.printer.PrintResourceRelation(top.FromResource, resource, string(top.ToRelation.Type))
 	if err != nil {
 		panic(err)
 	}
 }
 
-func Query(c *client.Client, top *dresource.Relation) (dresource.Resource, error) {
+func Query(c *client.Client, top *dresource.Relation) ([]dresource.Resource, error) {
 	switch top.Type {
 	case dresource.UnknownRelation:
 		panic("sdf")
 	case dresource.SpecNameRelation, dresource.NamespaceRelation, dresource.OwnerReferenceRelation:
-		contents, err := c.Get(top.GVK.Group, top.GVK.Version, top.GVK.Kind, top.Namespace, top.Name)
+		content, err := c.Get(top.GVK.Group, top.GVK.Version, top.GVK.Kind, top.Namespace, top.Name)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
-		resource, err := dresource.MakeFactory(contents)
+		resource, err := dresource.MakeFactory(content)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}
-		return resource, nil
+		return []dresource.Resource{resource}, nil
+	case dresource.SelectorRelation:
+		contents, err := c.ListByLabelSelector(top.GVK.Group, top.GVK.Version, top.GVK.Kind, top.Namespace, top.Selector.MatchLabels)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		var ret []dresource.Resource
+		for _, content := range contents {
+			resource, err := dresource.MakeFactory(content)
+			if err != nil {
+				return nil, errors.WithStack(err)
+			}
+			ret = append(ret, resource)
+		}
+		return ret, nil
 	default:
 		panic("sdf")
 	}
